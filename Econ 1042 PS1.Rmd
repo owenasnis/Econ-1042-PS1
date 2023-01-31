@@ -38,3 +38,19 @@ kickers %>%
 
 ```
 
+## Question 2
+
+```{r Q2}
+
+forty_to_fortyfive <- kickers %>%
+  filter(Distance %in% (40:45))
+
+mean(forty_to_fortyfive$Success) * 100
+
+over_fortyfive <- kickers %>% 
+  filter(Distance > 45)
+
+mean(over_fortyfive$Success) * 100
+
+```
+
