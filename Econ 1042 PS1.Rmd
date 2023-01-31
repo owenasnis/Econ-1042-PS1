@@ -1,0 +1,23 @@
+---
+title: "Econ 1042 PS1"
+author: "Owen Asnis"
+date: "2023-01-31"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+library(tidyverse)
+
+```
+
+```{r}
+
+read_csv("kickers_v2.csv")
+
+```
+
