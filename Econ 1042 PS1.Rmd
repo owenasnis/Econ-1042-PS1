@@ -17,7 +17,18 @@ library(tidyverse)
 
 ```{r}
 
-read_csv("kickers_v2.csv")
+kickers <- read_csv("kickers_v2.csv",
+                    col_types = cols(...1 = col_double(),
+                                     Team = col_character(),
+                                     Year = col_double(),
+                                     GameMinute = col_double(), 
+                                     Kicker = col_character(),
+                                     Distance = col_double(), 
+                                     ScoreDiff = col_double(), 
+                                     Grass = col_logical(), 
+                                     Success = col_double())) %>%
+  rename(., "ID" = "...1") %>%
+  mutate(Grass = if_else(Grass == TRUE, 1, 0))
 
 ```
 
