@@ -9,18 +9,32 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
+## Setup 
+
+```{r setup}
 
 library(tidyverse)
-
-```
-
-```{r}
 
 kickers <- read_csv("kickers_v2.csv",
                     show_col_types = FALSE) %>%
   rename(., "ID" = "...1") %>%
   mutate(Grass = if_else(Grass == TRUE, 1, 0))
+
+```
+
+## Question 1
+
+```{r Q1}
+
+# a 
+min(kickers$Distance)
+max(kickers$Distance)
+mean(kickers$Distance)
+median(kickers$Distance)
+
+# c
+kickers %>% 
+  filter(Distance == max(Distance))
 
 ```
 
