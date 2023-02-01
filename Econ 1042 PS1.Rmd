@@ -83,3 +83,52 @@ cor(kickers$Distance, kickers$Success)
 ```
 
 ## Question 5 
+
+```{r Q5}
+
+# short-form(coefficient) = long-form(coefficient) + (omitted variable coefficient)(correlation)
+
+lm2 <- lm_robust(Success ~ Grass + Distance, data = kickers)
+summary(lm2)
+
+# becomes more negative (adding distance is omitted variable bias)
+
+```
+
+## Question 6
+
+```{r Q6}
+
+lm3 <- lm_robust(Success ~ Distance + Grass + ScoreDiff + GameMinute, 
+                 data = kickers)
+summary(lm3)
+
+lm4 <- lm_robust(Success ~ Distance + Grass + ScoreDiff + GameMinute + Kicker, 
+                 data = kickers)
+summary(lm4)
+
+# Accounts for the skill of the kicker 
+
+```
+
+## Question 7 
+
+```{r Q7}
+
+new_data <- kickers %>%
+  filter(Kicker == "Tucker", 
+         ScoreDiff == -11, 
+         Year == 2015, 
+         GameMinute == 30)
+
+predict(lm4, newdata = new_data) * 100
+
+# estimate - Tucker coefficient 
+
+```
+
+```{r Q8}
+
+
+```
+
