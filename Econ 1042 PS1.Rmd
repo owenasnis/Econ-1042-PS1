@@ -1,7 +1,7 @@
 ---
 title: "Econ 1042 PS1"
 author: "Owen Asnis"
-date: "2023-01-31"
+date: "2023-02-01"
 output: pdf_document
 ---
 
@@ -10,10 +10,11 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(estimatr)
+library(robustbase)
 
 ```
 
-## Setup 
+# Data Wrangling 
 
 ```{r data wrangling}
 
@@ -24,7 +25,7 @@ kickers <- read_csv("kickers_v2.csv",
 
 ```
 
-## Question 1
+# Question 1
 
 ```{r Q1}
 
@@ -38,7 +39,7 @@ kickers %>%
 
 ```
 
-## Question 2
+# Question 2
 
 ```{r Q2}
 
@@ -54,7 +55,7 @@ mean(over_fortyfive$Success) * 100
 
 ```
 
-## Question 3
+# Question 3
 
 ```{r Q3}
 
@@ -73,7 +74,7 @@ summary(lm1)
 
 ```
 
-## Question 4 
+# Question 4 
 
 ```{r Q4}
 
@@ -82,7 +83,7 @@ cor(kickers$Distance, kickers$Success)
 
 ```
 
-## Question 5 
+# Question 5 
 
 ```{r Q5}
 
@@ -95,7 +96,7 @@ summary(lm2)
 
 ```
 
-## Question 6
+# Question 6
 
 ```{r Q6}
 
@@ -111,7 +112,7 @@ summary(lm4)
 
 ```
 
-## Question 7 
+# Question 7 
 
 ```{r Q7}
 
@@ -126,9 +127,3 @@ predict(lm4, newdata = new_data) * 100
 # estimate - Tucker coefficient 
 
 ```
-
-```{r Q8}
-
-
-```
-
