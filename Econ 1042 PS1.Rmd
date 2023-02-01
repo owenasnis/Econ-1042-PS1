@@ -12,6 +12,7 @@ library(tidyverse)
 library(estimatr)
 library(sandwich)
 library(lmtest)
+options(scipen = 5)
 
 ```
 
@@ -102,9 +103,6 @@ sprintf("Make rate on turf: %s percent", make_rate_turf)
 
 ```{r Q3p2}
 
-# Source: "Dealing with heteroskedasticity; regression with robust standard 
-# errors using R" by Bruno Rodrigues
-
 m1 <- lm(Success ~ Grass, data = kickers)
 coeftest(m1, vcov = vcovHC(m1))
 
@@ -138,36 +136,43 @@ sprintf("Correlation between distance and make percentage: %s",
 
 # Question 5 
 
-```{r Q5}
+### a.) The formula for omitted variable bias (in English) is: Short-Form Regression Coefficient = Long-Form Regression Coefficient + Omitted Variable Regression Coefficient x Correlation Between Orginal Variables. 
 
-# short-form(coefficient) = long-form(coefficient) + (omitted variable coefficient)(correlation)
+### b.) Given (a), when you add distance when estimating the effect of a kick being on grass, you would expect that the coefficient for surface would become more negative, because distance is negatively correlated with make percentage and is the omitted variable. 
+```{r Q5b}
 
-lm2 <- lm_robust(Success ~ Grass + Distance, data = kickers)
-summary(lm2)
-
-# becomes more negative (adding distance is omitted variable bias)
+m2 <- lm_robust(Success ~ Grass + Distance, data = kickers)
+summary(m2)
 
 ```
+### When the regression is run with distance, the estimate for Grass becomes more negative, as expected. Specifically, it was -0.01933 (see Question 3) and now is -0.01997. 
 
 # Question 6
 
-```{r Q6}
+### a.) 
+```{r Q6a}
 
-lm3 <- lm_robust(Success ~ Distance + Grass + ScoreDiff + GameMinute, 
+m3 <- lm_robust(Success ~ Distance + Grass + ScoreDiff + GameMinute, 
                  data = kickers)
-summary(lm3)
-
-lm4 <- lm_robust(Success ~ Distance + Grass + ScoreDiff + GameMinute + Kicker, 
-                 data = kickers)
-summary(lm4)
-
-# Accounts for the skill of the kicker 
+summary(m3)
 
 ```
+### For every yard of distance added, the kick is roughly 1.2% less likely to be made. When the surface is grass, the kick is roughly 2% less likely to be made than if the surface was turf. For each point of score differential added, the kick is roughly 0.01% less likely to be made. And for each game minute gone by, the kick is 0.0004% more likely to be made. Therefore, it seems like kickers do ever so slightly better late in the game, and the score of the game does seem to slightly effect them in that they do slightly better when their team if behind. 
+
+### b.)
+```{r Q6b}
+
+m4 <- lm_robust(Success ~ Distance + Grass + ScoreDiff + GameMinute + Kicker, 
+                 data = kickers)
+summary(m4)
+
+```
+### Kicker fixed effects corrects for the skill of each individual kicker. Adjusted R-squared increases from 0.1139 to 0.1205, which makes sense because this is a more complex model and seems to be better fitted. 
 
 # Question 7 
 
-```{r Q7}
+### a.)
+```{r Q7a}
 
 new_data <- kickers %>%
   filter(Kicker == "Tucker", 
@@ -175,8 +180,30 @@ new_data <- kickers %>%
          Year == 2015, 
          GameMinute == 30)
 
-predict(lm4, newdata = new_data) * 100
+tucker_lm_predict <- round((predict(m4, newdata = new_data) * 100), 
+                           digits = 3)
 
-# estimate - Tucker coefficient 
+sprintf("Probability of Justin Tucker making specified kick: %s percent", 
+        tucker_lm_predict)
 
 ```
+
+### b.)
+```{r Q7b}
+
+new_data
+
+```
+### The distance of the kick was only 30 yards and Justin Tucker is one of the best kickers in NFL history, so that prediction does seem reasonable to me. 
+
+```{r Q7c}
+
+average_lm_predict <- round((tucker_lm_predict - 0.10472919),
+                            digits = 3)
+
+sprintf("Probability of an average kicker making specified kick: %s percent", 
+        average_lm_predict)
+
+```
+
+# Question 8 
