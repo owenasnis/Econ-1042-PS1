@@ -16,7 +16,7 @@ library(robustbase)
 
 # Data Wrangling 
 
-```{r data wrangling}
+```{r data wrangling, message=FALSE}
 
 kickers <- read_csv("kickers_v2.csv",
                     show_col_types = FALSE) %>%
@@ -27,17 +27,33 @@ kickers <- read_csv("kickers_v2.csv",
 
 # Question 1
 
-```{r Q1}
+### a.)
+```{r Q1a}
 
-min(kickers$Distance)
-max(kickers$Distance)
-mean(kickers$Distance)
-median(kickers$Distance)
+min <- min(kickers$Distance)
+max <- max(kickers$Distance)
+mean <- round(mean(kickers$Distance), digits = 3)
+median <- median(kickers$Distance)
 
-kickers %>% 
-  filter(Distance == max(Distance))
+sprintf("Minimum distance: %s yards.", min)
+sprintf("Maximum distance: %s yards.", max)
+sprintf("Mean distance: %s yards", mean)
+sprintf("Median distance: %s yards", median)
 
 ```
+
+### b.) The minimum distance (18 yards) isn't lower for two reasons: First, the kicker must kick the ball through the end zone (accounting for 10 yards) in addition to the distance from the ball to the goal line, and second the ball is snapped a distance of 7 yards to the holder, who holds the ball for the kicker. Therefore, an 18 yard field goal actually begins at the 1 yard line, but the total distance of the kick is 10 yards (the end zone) + 7 yards (the snap) + 1 yard (the distance to the goal line) = 18 yards. 
+
+### c.)
+```{r Q1b}
+
+max_distance_kick <- kickers %>% 
+  filter(Distance == max(Distance))
+
+print(max_distance_kick)
+
+```
+### The special circumstance that explains the maximum is that it occured in the 30th minute of the game, the last minute of the 2nd quarter before halftime. Therefore, in this instance, the Oakland Raiders were forced to try to score, because the half was ending and possession is assigned based on the result of the coin toss after the 2nd quarter, and decided they had a better chance of scoring on a very long field goal rather than a hail mary. 
 
 # Question 2
 
@@ -46,12 +62,17 @@ kickers %>%
 forty_to_fortyfive <- kickers %>%
   filter(Distance %in% (40:45))
 
-mean(forty_to_fortyfive$Success) * 100
+forty_to_fortyfive_success <- round((mean(forty_to_fortyfive$Success) * 100), 
+                                    digits = 3)
 
 over_fortyfive <- kickers %>% 
   filter(Distance > 45)
 
-mean(over_fortyfive$Success) * 100
+over_fortyfive_success <- round((mean(over_fortyfive$Success) * 100), 
+                            digits = 3)
+
+sprintf("Kicks from 40 to 45 yards made: %s percent", forty_to_fortyfive_success)
+sprintf("Kicks over 45 yards made: %s percent", over_fortyfive_success)
 
 ```
 
