@@ -157,7 +157,7 @@ m3 <- lm_robust(Success ~ Distance + Grass + ScoreDiff + GameMinute,
 summary(m3)
 
 ```
-### For every yard of distance added, the kick is roughly 1.2% less likely to be made. When the surface is grass, the kick is roughly 2% less likely to be made than if the surface was turf. For each point of score differential added, the kick is roughly 0.01% less likely to be made. And for each game minute gone by, the kick is 0.0004% more likely to be made. Therefore, it seems like kickers do ever so slightly better late in the game, and the score of the game does seem to slightly effect them in that they do slightly better when their team if behind. 
+### For every yard of distance added, the kick is roughly 1.2% less likely to be made. When the surface is grass, the kick is roughly 2% less likely to be made than if the surface was turf. For each point of score differential added, the kick is roughly 0.01% less likely to be made. And for each game minute gone by, the kick is 0.0004% more likely to be made. Therefore, it doesn't seem that kickers do better or worse late in the game and the score of the game doesn't seem to effect them, because both coefficients are so small that they are more likely to be caused by random noise.  
 
 ### b.)
 ```{r Q6b}
@@ -207,3 +207,38 @@ sprintf("Probability of an average kicker making specified kick: %s percent",
 ```
 
 # Question 8 
+
+### a.)
+```{r Q8}
+
+m5 <- glm(Success ~ Distance + Grass + ScoreDiff + GameMinute + Kicker,
+          family = binomial(),
+          data = kickers)
+
+tucker_glm_predict <- round((predict(m5, newdata = new_data, 
+                                     type = "response") * 100), 
+                           digits = 3)
+
+sprintf("Probability of Justin Tucker making specified kick: %s percent", 
+        tucker_glm_predict)
+
+```
+
+### b.) The coefficients look so different for the logistic regression versus the OLS regression, because coefficients in logistic regressions show a value of log odds whereas coefficients in OLS regressions show how each interval of one variable changes the other variable (Source: "Interpreting Coefficients in Linear and Logistic Regression" by Jonathan Benton). 
+
+# Question 9
+
+```{r Q9}
+
+kickers %>% 
+  group_by(Kicker) %>% 
+  summarise(make_rate = mean(Success), 
+            total_makes = sum(Success)) %>% 
+  arrange(desc(make_rate)) %>% 
+  filter(total_makes > 200) %>% 
+  head(2)
+
+```
+
+
+### Note: I worked with Ty Thabit on this problem set. 
