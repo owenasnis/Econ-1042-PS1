@@ -6,14 +6,16 @@ output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
+
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(estimatr)
+
 ```
 
 ## Setup 
 
-```{r setup}
-
-library(tidyverse)
+```{r data wrangling}
 
 kickers <- read_csv("kickers_v2.csv",
                     show_col_types = FALSE) %>%
@@ -26,13 +28,11 @@ kickers <- read_csv("kickers_v2.csv",
 
 ```{r Q1}
 
-# a 
 min(kickers$Distance)
 max(kickers$Distance)
 mean(kickers$Distance)
 median(kickers$Distance)
 
-# c
 kickers %>% 
   filter(Distance == max(Distance))
 
@@ -54,3 +54,32 @@ mean(over_fortyfive$Success) * 100
 
 ```
 
+## Question 3
+
+```{r Q3}
+
+grass_only <- kickers %>% 
+  filter(Grass == 1)
+
+mean(grass_only$Success) * 100
+
+turf_only <- kickers %>% 
+  filter(Grass == 0)
+
+mean(turf_only$Success) * 100
+
+lm1 <- lm_robust(Success ~ Grass, data = kickers)
+summary(lm1)
+
+```
+
+## Question 4 
+
+```{r Q4}
+
+cor(kickers$Distance, kickers$Grass)
+cor(kickers$Distance, kickers$Success)
+
+```
+
+## Question 5 
