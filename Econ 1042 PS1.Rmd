@@ -228,8 +228,8 @@ sprintf("Probability of Justin Tucker making specified kick: %s percent",
 
 # Question 9
 
-### a.)
-```{r Q9}
+### a.) 
+```{r Q9a}
 
 kickers %>% 
   group_by(Kicker) %>% 
@@ -237,11 +237,47 @@ kickers %>%
             total_makes = sum(Success)) %>% 
   arrange(desc(make_rate)) %>% 
   filter(total_makes > 200) %>% 
-  head(2)
+  head(1)
 
 ```
+### According to this analysis, Stephen Gostkowski was the best kicker in the NFL over this period. Gostkowski had the highest make percentage among kickers with at least 200 total makes in the dataset. In other words, he was consistently a high percentage kicker, and as a New England Patriots fan, this feels very right! 
+
+```{r Q9a2}
+
+kickers %>% 
+  filter(Distance > 45) %>% 
+  group_by(Kicker) %>% 
+  summarise(total_makes = sum(Success), 
+            over_fortyfive_percentage = mean(Success)) %>% 
+  filter(total_makes > 50) %>% 
+  arrange(desc(over_fortyfive_percentage)) %>% 
+  head(1)
+  
+```
+### According to this analysis, Adam Vinatieri was the best kicker in the NFL over this period. Vinatieri had the highest make percentage of attempts over 45 yeards among kickers with at least 50 total makes above 45 yards in the dataset. In other words, Vinatieri was consistantly a high percentage kicker from long range, and once again, as a Patriots fan, this feels right! 
 
 ### b.)
+```{r Q9b}
+
+kickers %>% 
+  filter(Kicker == "Gostkowski") %>% 
+  group_by(Year) %>% 
+  summarise(make_rate = mean(Success))
+
+```
+### Overall, Gostkowki's make rate is fairly stable over time. There are some ebbs and flows, but generally he's hovering around the low 80% range to low 90% range. 
+
+```{r Q9b2}
+
+kickers %>% 
+  filter(Distance > 45, 
+         Kicker == "Vinatieri") %>% 
+  group_by(Year) %>% 
+  summarise(over_fortyfive_percentage = mean(Success))
+  
+
+```
+### Vinatieri's make rate of attempts over 45 yards isn't stable over time. Specifically, between 2005-2009, Vinatieri's make rate for attempts over 45 yards falls below his rate for the whole dataset in 4 of 5 years, and between 2010-2014, his make rate is above his rate for the whole dataset in 4 of 5 years. Altogether, this shows that Vinatieri's make rate of attempts over 45 yards rose with more experience. 
 
 # Question 10
 
@@ -264,6 +300,12 @@ m7 <- lm_robust(make_rate ~ total_kicks + total_kicks_squared,
 summary(m7)
 
 ```
-### The regression with a linear specification shows some support to the conjecture that kickers get better with experience in this dataset, as for ever additional kick a kicker performs, their make rate slightly increases. The regression with a quadratic specification shows similar support at first, but eventually, shows that kickers performance would decline. A way to interpret this is that kickers get better with experience at first, but their performance eventually declines with age. 
+### The regression with a linear specification shows some support to the conjecture that kickers get better with experience in this dataset, as for ever additional kick a kicker performs, their make rate slightly increases. The regression with a quadratic specification shows similar support at first, but eventually, shows that kickers performance would decline. A way to interpret this is that kickers get better with experience at first, but their performance eventually declines with age. With this being said, these estimates certainly aren't perfect, as they don't consider many potential confounding variables and don't study how kickers' make rates change throughout this specific dataset. 
+
+# Question 11 
+
+### 1. Precipitation? - Precipitation would negatively bias the kicker, because it's harder to kick in rainy or snowy conditions. 
+### 2. Centered Spot? - A centered spot would positively bias the kicker, because it's more of a straight shot for the kicker to make the attempt.  
+### 3. Blocked? - A blocked kick would negatively bias the kicker, because even though the attempt wasn't made, it wasn't the kicker's fault (it was the lineman's fault). 
 
 ### Note: I worked with Ty Thabit on this problem set. 
