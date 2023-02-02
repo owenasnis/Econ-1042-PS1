@@ -228,6 +228,7 @@ sprintf("Probability of Justin Tucker making specified kick: %s percent",
 
 # Question 9
 
+### a.)
 ```{r Q9}
 
 kickers %>% 
@@ -240,5 +241,29 @@ kickers %>%
 
 ```
 
+### b.)
+
+# Question 10
+
+```{r Q10}
+
+simple <- kickers %>% 
+  mutate(kick = 1) %>% 
+  group_by(Kicker) %>% 
+  summarise(make_rate = mean(Success), 
+            total_kicks = sum(kick)) %>% 
+  arrange(desc(make_rate)) %>% 
+  mutate(total_kicks_squared = (total_kicks)^2)
+
+m6 <- lm_robust(make_rate ~ total_kicks, 
+                data = simple)
+summary(m6)
+
+m7 <- lm_robust(make_rate ~ total_kicks + total_kicks_squared, 
+                data = simple)
+summary(m7)
+
+```
+### The regression with a linear specification shows some support to the conjecture that kickers get better with experience in this dataset, as for ever additional kick a kicker performs, their make rate slightly increases. The regression with a quadratic specification shows similar support at first, but eventually, shows that kickers performance would decline. A way to interpret this is that kickers get better with experience at first, but their performance eventually declines with age. 
 
 ### Note: I worked with Ty Thabit on this problem set. 
